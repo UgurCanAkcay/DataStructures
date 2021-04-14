@@ -1,0 +1,170 @@
+/* Student Management System uses a level 1 pointer list to complete */
+
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+#define NAME_SIZE 10
+//#define MAX_SIZE 100
+typedef int DATATYPE;
+typedef struct stu{
+    char name[NAME_SIZE];
+    char sex[10];
+    DATATYPE grade;
+    DATATYPE id;
+    struct stu *next;
+}STD;//Define the student linked list structure
+
+// Create a list
+//student* creative(STD* Lstudent)//To return a variable of structure type
+void creative(STD *Lstudent)
+{
+    int i;
+    int n;
+    STD *r;
+    r = Lstudent; // create a structure pointer that is offset downward from the head node
+    printf("Please enter the number of students\n");
+    scanf("%d", &n);
+    for(i = 0; i < n; i++)
+    {
+        STD *newStudent = (STD *)malloc(sizeof(STD));
+        printf("Please enter student ID number, name, gender, grade \n");
+        scanf("%d%s%s%d", &newStudent->id, newStudent->name, newStudent->sex, &newStudent->grade);
+        r->next = newStudent;
+        r = newStudent;
+    }
+    r->next = NULL;
+    //return Lstudent;
+}
+// Add students to the linked list to add
+int add(STD *Lstudent)
+{
+    STD *r;
+    char ch;
+    int i = 1;
+    r = Lstudent;
+
+    p2:
+
+
+    printf ("Please enter the student ID\n");
+    scanf("%d", &i);
+    if(r->next == NULL)
+    {
+        printf ("linked list is empty \n");
+        goto p2;
+    }
+    while(r->next && r->next->id != i)
+    {
+        r = r->next;
+    }
+    if(r->next == NULL || r->next->id != i)
+    {
+        printf("This location does not exist, please re-enter \n");
+        goto p2;
+    }
+
+
+    STD *newStudent = (STD*)malloc(sizeof(STD));//Assign new node
+    printf ("Please enter student ID number, name, gender, grade \n");
+    scanf("%d%s%s%d", &newStudent->id, newStudent->name, newStudent->sex, &newStudent->grade);
+    //printf("detect 1");
+    newStudent->next = r->next;
+    //printf("detect 2");
+    r->next = newStudent;
+    //printf("detect 3");
+    printf("add success\n");
+    printf ("Do you want to continue adding (y/n)\n");
+    scanf("%c", &ch);
+    if (ch == 'y')
+    {
+        goto p2;
+    }
+    else if(ch == 'n')
+    {
+        return 0;
+    }
+}
+
+void printSTD(STD *Lstudent)
+{
+    STD *r;
+    r = Lstudent->next;
+    while(r)
+    {
+        printf("student number = %d, name = %s, gender = %s, grade = %d\n", r->id, r->name, r->sex, r->grade);
+        r = r->next;
+    }
+}
+
+int DelSTD(STD *Lstudent)
+{
+    int flag = 0, a;
+    STD *r, *t;
+    r = Lstudent;
+    printf("current information\n");
+    printSTD(Lstudent);
+    printf ("Please enter the student number to be deleted \n");
+    scanf("%d", &a);
+    if (r->next == NULL)
+    {
+        printf ("The current linked list is empty, please add \n");
+        return 0;
+    }
+    while(r->next != NULL )
+    {
+        if(a == r->next->id)
+        {
+            flag = 1;
+            break;
+        }
+        r = r->next;
+    }
+    if(flag = 0)
+    {
+        printf("The student number does not exist \n");
+    }
+    t = r->next;
+    r->next = r->next->next;
+    free(t);
+}
+
+void modifySTD(STD* Lstudent)
+{
+
+}
+
+void menu()
+{
+    printf("------------------------------------\n");
+    printf("------------Please enter the operation ---------------\n");
+    printf("-----------1 create student table -------------\n");
+    printf("-----------2 Add Student Information-----------\n");
+    printf("-----------3 delete student information-----------\n");
+    printf("-----------4 query student information -----------\n");
+    printf("-----------5 Modify Student Information-----------\n");
+    printf("-----------0 exit system ---------------\n");
+}
+
+int main()
+{
+    STD *Lstudent = (STD *)malloc(sizeof(STD));
+    Lstudent->next = NULL;//Create a head node
+    while(1)
+    {
+        int i;
+        menu();
+        scanf("%d", &i);
+        switch(i)
+        {
+            case 1:creative(Lstudent);break;
+            case 2:add(Lstudent);break;
+            case 3:DelSTD(Lstudent);break;
+            case 4:printSTD(Lstudent);break;
+            case 5:modifySTD(Lstudent);break;
+            case 0:return 0;
+            Default: printf("Input error, please re-enter \n");
+            break;
+        }
+}
+return 0;
+}
